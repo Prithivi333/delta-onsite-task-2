@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Oreo Stack Generator</title>
+    <style>
+    #canvas{
+        margin: auto;
+        border:2px solid black;
+        display: block;
+    }
+    </style>
+</head>
+
+<body>
+    <p>Enter a string with the units 'o','re','&' to make an oreo stack<span><img src="otop.png" id="otop"><img src="odown.png" id="odown"><img src="re.png" id="re"></span></p>
+    <label for="input">Enter input string with mentioned units:</label>
+    <input id="input" value="oreo" type="text">
+    <button id="sub" onclick="validate()">Submit</button>
+    <div id="error"></div>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+    var canvas = document.getElementById('canvas');
+    context = canvas.getContext('2d');
+    canvas.width=window.innerWidth/2;
+    canvas.height=1000;
+    var otop=document.getElementById('otop');
+    var odown=document.getElementById('odown');
+    var re=document.getElementById('re');
+    otop.src="otop.png";
+    odown.src="odown.png";
+    re.src="re.png";
+    
+    function draw(final){
+        var counts=count(final);
+        co=counts[0];
+        cre=counts[1];
+        ca=counts[2];       
+        for(let i=0;i<final.length;i++){
+            if(final[i]==="o" || final[i]==='O'){
+                if(i==final.length-1){
+                context.drawImage(odown,0,i*odown.height,odown.width,odown.height);
+                //console.log(i);
+                }
+                else{
+                    //console.log(i);
+                    context.drawImage(otop,0,i*otop.height,otop.width,otop.height);
+                }
+            }
+            else if(final[i]==='re' || final[i]==='RE' || final[i]==='Re' || final[i]==='rE'){
+                context.drawImage(re,0,i*re.height,re.width,re.height);
+            }
+            else{
+                context.rect(0,otop.height,otop.width,otop.height);
+            }
+        }
+    }
+    function validate() {
+        var chk = true;
+        var input = document.getElementById('input');
+        var arr = input.value.split("");
+        var final = [];
+        /*console.log(arr);
+        console.log(chk);
+        console.log(input.value);*/
+
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === "o" || arr[i] === "O") {
+                final.push("o");
+                console.log(final);
+            }
+            else if (arr[i] === "r" || arr[i] === "R") {
+                if (arr[i + 1] === "e" || arr[i + 1] === "E") {
+                    i += 1;
+                    final.push("re");
+                    console.log(final);
+                    console.log(chk);
+                }
+                else {
+                    console.log('1');
+                    chk = false;
+                    console.log(chk);
+                }
+            }
+            else if (arr[i] === "&") {
+                final.push("&");
+            }
+            else {
+                console.log('2');
+                chk = false;
+            }
+        }
+        if (!chk) {
+            document.getElementById('error').innerHTML = "INVALID INPUT!!!<span><button id='reset' onclick='window.location.reload()'>Try again</Button></span>";
+            input.disabled="true";
+        }
+        else{
+            console.log('done');
+            draw(final);
+        }
+    }
+    function count(final){
+        let co=0;
+        var cre=0;
+        var ca=0;
+        for(x of final){
+            console.log(x);
+            console.log(final);
+            if(x=='o' || x=='O'){
+                co+=1;
+            }
+            else if(x==='re' || x==='RE' || x==='Re' || x==='rE'){
+                cre+=1;
+            }
+            else if(x==='&'){
+                ca+=1;
+            }
+        }
+        return[co,cre,ca];
+    }
+    
+</script>
+
+</html>
