@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Oreo Stack Generator</title>
+    <style>
+        #canvas {
+            margin: auto;
+            border: 2px solid black;
+            position: relative;
+        }
+
+        .stack {
+            width: 98px;
+            height: 61px;
+            padding: 0px;
+            margin: 0px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            object-fit: contain;
+        }
+
+        .rect {
+            width: 200px;
+            height: 200px;
+        }
+
+        #frst {
+            position: relative;
+            z-index: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <p>Enter a string with the units 'o','re','&' to make an oreo stack<span><img src="otop.png" class="image"><img
+                src="odown.png"><img src="re.png" class="image"></span></p>
+    <label for="input">Enter input string with mentioned units:</label>
+    <input id="input" value="oreo" type="text">
+    <button id="sub" onclick="validate()">Submit</button>
+    <div id="error"></div>
+    <div id="canvas"></div>
+</body>
+<script>
+    var canvas = document.getElementById('canvas');
+    canvas.style.width = "300px";
+    canvas.style.height = "500px";
+    function setStack(url,pos) {
+        var stack = document.createElement('div');
+        stack.setAttribute('class', 'stack');
+        stack.style.position='absolute';
+        stack.style.backgroundImage = "url('"+url+"')";
+        stack.style.zIndex=(-pos*100);
+        stack.style.top=''+20*pos+'px';
+        canvas.appendChild(stack);
+    }
+    function draw(final) {
+        for (let i = 0; i < final.length; i++) {
+            //console.log(x);
+            if (final[i] === "o" || final[i] === 'O') {
+                if (i != final.length - 1) {
+                    if (i == 0) {
+                        var stack = document.createElement('div');
+                        stack.setAttribute('class', 'stack');
+                        stack.setAttribute('id', 'frst');
+                        stack.style.backgroundImage = "url('otop.png')";
+                        canvas.appendChild(stack);
+                    }
+                    else { setStack('otop.png',i); }
+                }
+                else {
+                    setStack('odown.png',i)
+                }
+            }
+            else if (final[i] === 're' || final[i] === 'RE' || final[i] === 'Re' || final[i] === 'rE') {
+                if (i == 0) {
+                        var stack = document.createElement('div');
+                        stack.setAttribute('class', 'stack');
+                        stack.setAttribute('id', 'frst');
+                        stack.style.backgroundImage = "url('re.png')";
+                        canvas.appendChild(stack);
+                    }
+                    else { setStack('re.png',i); }
+            }
+            else if (final[i] === "&") {
+                var stack = document.createElement('div');
+                stack.setAttribute('class', 'rect');
+                canvas.appendChild(stack);
+            }
+        }
+    }
+    function validate() {
+        var chk = true;
+        var input = document.getElementById('input');
+        var arr = input.value.split("");
+        var final = [];
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === "o" || arr[i] === "O") {
+                final.push("o");
+            }
+            else if (arr[i] === "r" || arr[i] === "R") {
+                if (arr[i + 1] === "e" || arr[i + 1] === "E") {
+                    i += 1;
+                    final.push("re");
+                }
+                else {
+                    chk = false;
+                }
+            }
+            else if (arr[i] === "&") {
+                final.push("&");
+            }
+            else {
+                chk = false;
+            }
+        }
+        if (!chk) {
+            document.getElementById('error').innerHTML = "INVALID INPUT!!!<span><button id='reset' onclick='window.location.reload()'>Try again</Button></span>";
+            input.disabled = "true";
+        }
+        else {
+            console.log('done');
+            draw(final);
+        }
+    }
+
+
+</script>
+
+</html>
